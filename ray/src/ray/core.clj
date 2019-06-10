@@ -67,6 +67,29 @@
      (* -1 (- (* x1 z2) (* z1 x2)))
      (- (* x1 y2) (* y1 x2))]))
 
+(def ray vector)
+
+(defn ray_point_at_param
+  [ray t]
+  (let [[A B] ray]
+    (vec_add A (vec_mul_scalar t B))))
+
+(defn ray_origin
+  [ray]
+  (let [[A B] ray] A))
+
+(defn ray_direction
+  [ray]
+  (let [[A B] ray] B))
+
+(defn color
+  [r]
+  (let [unit_direction (vec_unit (ray_direction r))]
+    (let [t (* 0.5 (+ (nth unit_direction 1) 1))]
+      (vec_add
+        (vec_mul_scalar (- 1.0 t) [1.0 1.0 1.0])
+        (vec_mul_scalar t [0.5 0.7 1.0])))))
+
 (defn pixel
   [nx ny j i]
   (let [r (/ i nx) g (/ j ny) b 0.2]

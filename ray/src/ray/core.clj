@@ -5,23 +5,67 @@
   [v]
   (let [[x y z] v] (printf "%d %d %d\n" x y z)))
 
+(defn vec_length
+  [v]
+  (let [[x y z] v]
+    (Math/sqrt (+ (* x x) (* y y) (* z z)))))
+
+(defn sq_length
+  [v]
+  (let [[x y z] v]
+    (+ (* x x) (* y y) (* z z))))
+
 (defn vec_unit
   [v]
   (let [[x y z] v]
     (let [k (/ 1 (Math/sqrt (+ (* x x) (* y y ) (* z z))))]
       [(* x k) ( * y k) (* z k)])))
 
-(defn vec_+
+(defn vec_add
   [v1 v2]
   (let [[x1 y1 z1] v1
         [x2 y2 z2] v2]
     [(+ x1 x2) (+ y1 y2) (+ z1 z2)]))
 
-(defn vec_-
+(defn vec_sub
   [v1 v2]
   (let [[x1 y1 z1] v1
         [x2 y2 z2] v2]
     [(- x1 x2) (- y1 y2) (- z1 z2)]))
+
+(defn vec_mul
+  [v1 v2]
+  (let [[x1 y1 z1] v1
+        [x2 y2 z2] v2]
+    [(* x1 x2) (* y1 y2) (* z1 z2)]))
+
+(defn vec_div
+  [v1 v2]
+  (let [[x1 y1 z1] v1
+        [x2 y2 z2] v2]
+    [(/ x1 x2) (/ y1 y2) (/ z1 z2)]))
+
+(defn vec_mul_scalar
+  [s v]
+  (let [[x y z] v] [(* x s) (* y s) (* z s)]))
+
+(defn vec_div_scalar
+  [s v]
+  (let [[x y z] v] [(/ x s) (/ y s) (/ z s)]))
+
+(defn vec_dot
+  [v1 v2]
+  (let [[x1 y1 z1] v1
+        [x2 y2 z2] v2]
+    (+ (* x1 x2) (* y1 y2) (* z1 z2))))
+
+(defn vec_cross
+  [v1 v2]
+  (let [[x1 y1 z1] v1
+        [x2 y2 z2] v2]
+    [(- (* y1 z2) (* z1 y2))
+     (* -1 (- (* x1 z2) (* z1 x2)))
+     (- (* x1 y2) (* y1 x2))]))
 
 (defn pixel
   [nx ny j i]

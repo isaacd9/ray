@@ -90,6 +90,11 @@
         (vec_mul_scalar (- 1.0 t) [1.0 1.0 1.0])
         (vec_mul_scalar t [0.5 0.7 1.0])))))
 
+(def lower_left_corner [-2.0 -1.0 -1.0])
+(def horizontal [4.0 0.0 0.0])
+(def vertical [0.0 2.0 0.0])
+(def origin [0.0 0.0 0.0])
+
 (defn pixel
   [nx ny j i]
   (let [r (/ i nx) g (/ j ny) b 0.2]
@@ -97,15 +102,15 @@
       (format "%d %d %d" (int ir) (int ig) (int ib)))))
 
 (defn pixels
-  [nx ny]
-  (let [pixeln (partial pixel nx ny)]
-    (let [d (fn [m] (let [[j i] m] (pixeln j i)))]
-      (map d (for [j (reverse (range ny)) i (range nx)] [j i])))))
+  [nx ny pixelf]
+    (let [d (fn [m] (let [[j i] m] (pixelf j i)))]
+      (map d (for [j (reverse (range ny)) i (range nx)] [j i]))))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
   (let [nx 200 ny 100]
+    (let [pixeln (partial pixel nx ny)]
     (do
       (printf "P3\n%d %d \n255\n", nx ny)
-      (doall (map println (pixels nx ny))))))
+      (doall (map println (pixels nx ny pixeln)))))))

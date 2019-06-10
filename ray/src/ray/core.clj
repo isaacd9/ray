@@ -99,7 +99,7 @@
   [nx ny j i]
   (let [r (/ i nx) g (/ j ny) b 0.2]
     (let [ir (* 255.99 r) ig (* 255.99 g) ib (* 255.99 b)]
-      (format "%d %d %d" (int ir) (int ig) (int ib)))))
+      [(int ir) (int ig) (int ib)])))
 
 (defn pixels
   [nx ny pixelf]
@@ -110,7 +110,10 @@
   [nx ny pixelf]
     (do
       (printf "P3\n%d %d \n255\n", nx ny)
-      (doall (map println (pixels nx ny pixelf)))))
+      (doall
+        (map
+          (fn [v] (let [[x y z] v] (printf "%d %d %d\n" x y z)))
+          (pixels nx ny pixelf)))))
 
 (defn -main
   "I don't do a whole lot ... yet."

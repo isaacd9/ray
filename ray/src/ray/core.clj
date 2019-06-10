@@ -106,11 +106,15 @@
     (let [d (fn [m] (let [[j i] m] (pixelf j i)))]
       (map d (for [j (reverse (range ny)) i (range nx)] [j i]))))
 
+(defn gen_ppm
+  [nx ny pixelf]
+    (do
+      (printf "P3\n%d %d \n255\n", nx ny)
+      (doall (map println (pixels nx ny pixelf)))))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
   (let [nx 200 ny 100]
     (let [pixeln (partial pixel nx ny)]
-    (do
-      (printf "P3\n%d %d \n255\n", nx ny)
-      (doall (map println (pixels nx ny pixeln)))))))
+      (gen_ppm nx ny pixeln))))

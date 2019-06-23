@@ -66,20 +66,18 @@
      (* -1 (- (* x1 z2) (* z1 x2)))
      (- (* x1 y2) (* y1 x2)))))
 
-(def ray vector)
+(defrecord Ray [A B])
+
+(defn ray_origin
+  [{:keys [A B]}] A)
+
+(defn ray_direction
+  [{:keys [A B]}] B)
 
 (defn ray_point_at_param
   [ray t]
-  (let [[A B] ray]
+  (let [{:keys [A B]} ray]
     (vec_add A (vec_mul_scalar t B))))
-
-(defn ray_origin
-  [ray]
-  (let [[A B] ray] A))
-
-(defn ray_direction
-  [ray]
-  (let [[A B] ray] B))
 
 (defn color
   [r]

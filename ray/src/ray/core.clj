@@ -93,11 +93,25 @@
 (def origin (Vec3. 0.0 0.0 0.0))
 
 ;; multicolored pixel impl
-(defn pixel
+(defn multicolored_pixel
   [nx ny j i]
   (let [r (/ i nx) g (/ j ny) b 0.2]
     (let [ir (* 255.99 r) ig (* 255.99 g) ib (* 255.99 b)]
       [(int ir) (int ig) (int ib)])))
+
+(defn gradient_pixel
+  [nx ny j i]
+  (let [u (/ i nx)
+        v (/ j ny)]
+    (let [r (Ray.  origin (vec_add (vec_add
+                lower_left_corner
+                (vec_mul_scalar u horizontal))
+                (vec_mul_scalar v vertical)))]
+      (let [col (color r)]
+        (let [ir (* 255.99 (:x col))
+              ig (* 255.99 (:y col))
+              ib (* 255.99 (:z col))]
+          [(int ir) (int ig) (int ib)])))))
 
 ;; Calls pixelf for every point in nx ny
 (defn pixels
@@ -119,5 +133,5 @@
   "I don't do a whole lot ... yet."
   [& args]
   (let [nx 200 ny 100]
-    (let [pixeln (partial pixel nx ny)]
+    (let [pixeln (partial gradient_pixel nx ny)]
       (gen_ppm nx ny pixeln))))

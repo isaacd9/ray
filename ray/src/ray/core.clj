@@ -82,27 +82,30 @@
 (defn color
   [r]
   (let [unit_direction (vec_unit (ray_direction r))]
-    (let [t (* 0.5 (+ (nth unit_direction 1) 1))]
+    (let [t (* 0.5 (+ (:y unit_direction) 1.0))]
       (vec_add
-        (vec_mul_scalar (- 1.0 t) [1.0 1.0 1.0])
-        (vec_mul_scalar t [0.5 0.7 1.0])))))
+        (vec_mul_scalar (- 1.0 t) (Vec3. 1.0 1.0 1.0))
+        (vec_mul_scalar t (Vec3. 0.5 0.7 1.0))))))
 
-(def lower_left_corner [-2.0 -1.0 -1.0])
-(def horizontal [4.0 0.0 0.0])
-(def vertical [0.0 2.0 0.0])
-(def origin [0.0 0.0 0.0])
+(def lower_left_corner (Vec3. -2.0 -1.0 -1.0))
+(def horizontal (Vec3. 4.0 0.0 0.0))
+(def vertical (Vec3. 0.0 2.0 0.0))
+(def origin (Vec3. 0.0 0.0 0.0))
 
+;; multicolored pixel impl
 (defn pixel
   [nx ny j i]
   (let [r (/ i nx) g (/ j ny) b 0.2]
     (let [ir (* 255.99 r) ig (* 255.99 g) ib (* 255.99 b)]
       [(int ir) (int ig) (int ib)])))
 
+;; Calls pixelf for every point in nx ny
 (defn pixels
   [nx ny pixelf]
     (let [d (fn [m] (let [[j i] m] (pixelf j i)))]
       (map d (for [j (reverse (range ny)) i (range nx)] [j i]))))
 
+;; Generates a ppm file for the given nx and ny, using pixelf on each point
 (defn gen_ppm
   [nx ny pixelf]
     (do

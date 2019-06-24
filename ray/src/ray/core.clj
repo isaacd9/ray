@@ -4,13 +4,28 @@
            [ray.ray Ray])
   (:gen-class))
 
-(defn color
+(defn hit_sphere
+  [center radius r]
+  (let [oc (vec_sub (ray_origin r) center)]
+    (let [a (vec_dot (ray_direction r) (ray_direction r))
+          b (* 2.0 (vec_dot oc (ray_direction r)))
+          c (- (vec_dot oc oc) (* radius radius))]
+      (let [discriminant (- (* b b) (* 4 a c))]
+        (> discriminant 0)))))
+
+(defn gradient_color
   [r]
   (let [unit_direction (vec_unit (ray_direction r))]
     (let [t (* 0.5 (+ (:y unit_direction) 1.0))]
       (vec_add
         (vec_mul_scalar (- 1.0 t) (Vec3. 1.0 1.0 1.0))
         (vec_mul_scalar t (Vec3. 0.5 0.7 1.0))))))
+
+(defn sphere_color
+  [r]
+  (if (hit_sphere (Vec3. 0 0 1) 0.25 r)
+    (Vec3. 1 0 0)
+    (gradient_color r)))
 
 (def lower_left_corner (Vec3. -2.0 -1.0 -1.0))
 (def horizontal (Vec3. 4.0 0.0 0.0))
@@ -32,7 +47,7 @@
                 lower_left_corner
                 (vec_mul_scalar u horizontal))
                 (vec_mul_scalar v vertical)))]
-      (let [col (color r)]
+      (let [col (sphere_color r)]
         (let [ir (* 255.99 (:x col))
               ig (* 255.99 (:y col))
               ib (* 255.99 (:z col))]

@@ -11,7 +11,10 @@
           b (* 2.0 (vec_dot oc (ray_direction r)))
           c (- (vec_dot oc oc) (* radius radius))]
       (let [discriminant (- (* b b) (* 4 a c))]
-        (> discriminant 0)))))
+        (if (< discriminant 0)
+          -1.0
+          (/ (- (- b) (Math/sqrt discriminant))
+             (* 2.0 a)))))))
 
 (defn gradient_color
   [r]
@@ -23,9 +26,11 @@
 
 (defn sphere_color
   [r]
-  (if (hit_sphere (Vec3. 0 0 1) 0.25 r)
-    (Vec3. 1 0 0)
-    (gradient_color r)))
+  (let [t (hit_sphere (Vec3. 0 0 -1) 0.5 r)]
+    (if (> t 0)
+      (let [N (vec_unit (vec_sub (ray_point_at_param r t) (Vec3. 0 0 -1.0)))]
+        (vec_mul_scalar 0.5 (vec_add (Vec3. 1 1 1) N)))
+      (gradient_color r))))
 
 (def lower_left_corner (Vec3. -2.0 -1.0 -1.0))
 (def horizontal (Vec3. 4.0 0.0 0.0))
